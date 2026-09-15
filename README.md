@@ -3,7 +3,7 @@
 # CMOS Flash ADC with TMCC-Based Comparator
 
 [![Cadence](https://img.shields.io/badge/Tool-Cadence%20EDA-red.svg)](https://www.cadence.com/)
-[![Technology](https://img.shields.io/badge/Process-gpdk060nm-blue.svg)](/)
+[![Technology](https://img.shields.io/badge/Process-UMC_65nm-blue.svg)](/)
 [![Type](https://img.shields.io/badge/Design-Analog%20IC-green.svg)](/)
 [![ADC](https://img.shields.io/badge/Resolution-3--bit-orange.svg)](/)
 
@@ -150,7 +150,7 @@ The encoder converts the 7-bit thermometer code into a 3-bit binary output:
 | Parameter | Value |
 |-----------|-------|
 | **Resolution** | 3-bit |
-| **Technology** | gpdk060nm CMOS |
+| **Technology** | UMC 65nm CMOS |
 | **Supply Voltage** | 1.2 V |
 | **Comparator Type** | TMCC (Threshold-Modulated Current) |
 | **Logic Style** | Custom transistor-level CMOS |
@@ -163,7 +163,7 @@ The encoder converts the 7-bit thermometer code into a 3-bit binary output:
 |----------|---------------|
 | **Design Environment** | Cadence Virtuoso (ADE L) |
 | **Simulation Engine** | Spectre |
-| **Technology Node** | gpdk060nm CMOS |
+| **Technology Node** | UMC 65nm CMOS |
 | **Supply Voltage** | 1.2 V |
 | **Logic Type** | Custom CMOS (pMOS + nMOS), no standard cells |
 
@@ -171,7 +171,7 @@ The encoder converts the 7-bit thermometer code into a 3-bit binary output:
 
 ## Repository Contents
 
-This repository contains schematic screenshots documenting the design, not the underlying Cadence project files. The Virtuoso libraries, netlists, testbenches, and gpdk060nm PDK are not included (institutional/tool licensing).
+This repository contains schematic screenshots documenting the design, not the underlying Cadence project files. The Virtuoso libraries, netlists, testbenches, and UMC 65nm PDK are not included (institutional/tool licensing).
 
 ```
 Flash-ADC/
