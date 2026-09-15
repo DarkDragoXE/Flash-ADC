@@ -6,11 +6,10 @@
 [![Technology](https://img.shields.io/badge/Process-gpdk060nm-blue.svg)](/)
 [![Type](https://img.shields.io/badge/Design-Analog%20IC-green.svg)](/)
 [![ADC](https://img.shields.io/badge/Resolution-3--bit-orange.svg)](/)
-[![CSIR](https://img.shields.io/badge/CSIR--CEERI-Pilani-purple.svg)](/)
 
-**A fully custom transistor-level 3-bit Flash ADC using TMCC comparators and custom CMOS logic gates**
+**Transistor-level schematics for a 3-bit Flash ADC, designed in Cadence Virtuoso**
 
-[Overview](#overview) | [Architecture](#architecture) | [Schematics](#schematics) | [Specifications](#specifications) | [Author](#author)
+[Overview](#overview) | [Architecture](#architecture) | [Schematics](#design-stages) | [Specifications](#specifications) | [Repository Contents](#repository-contents) | [Author](#author)
 
 </div>
 
@@ -18,28 +17,24 @@
 
 ## About
 
-This project was developed at **CSIR-CEERI, Pilani** (April 2025 - June 2025) as part of an Advanced VLSI Design research program. The Flash ADC demonstrates custom analog IC design techniques using fully transistor-level implementation without standard cells.
+This project was developed at **CSIR-CEERI, Pilani** (April 2025 - June 2025) during an Advanced VLSI Design research program. It is a 3-bit Flash ADC built entirely at the transistor level (no standard cell library) in Cadence Virtuoso.
 
 | | |
 |---|---|
 | **Institution** | CSIR-CEERI, Pilani |
 | **Duration** | April 2025 - June 2025 |
 | **Team Size** | 2 |
-| **Role** | Team Member |
 | **Tools** | Cadence EDA (Virtuoso, ADE L, Spectre) |
-
----
 
 ## Overview
 
-This project presents a complete transistor-level design of a **3-bit Flash Analog-to-Digital Converter (ADC)** implemented in **Cadence Virtuoso**. The design utilizes **Threshold-Modulated Current Comparator (TMCC)** architecture for high-speed analog threshold detection.
+The design implements a **3-bit Flash Analog-to-Digital Converter** using a **Threshold-Modulated Current Comparator (TMCC)** front end followed by custom transistor-level CMOS logic gates that convert the resulting thermometer code into a 3-bit binary output.
 
-**Key Achievements:**
-- Designed custom Flash ADC using TMCC comparators and transistor-level encoder
-- Implemented CMOS-based 4-input OR gates to process thermometer code
-- Built custom AND gates to convert TMCC outputs into clean digital levels
-- Successfully created complete Flash ADC from comparators to binary encoder
-- Optimized for low latency and robust analog-to-digital conversion
+What was built:
+- A bank of 7 TMCC comparators to produce a thermometer-coded representation of the analog input
+- Custom transistor-level CMOS AND gates to restore the comparator outputs to clean logic levels
+- Custom transistor-level CMOS OR gates, combined into an 8-to-3 thermometer-to-binary encoder
+- A top-level schematic integrating the comparator array, logic stages, and encoder into a complete Flash ADC
 
 ---
 
@@ -48,7 +43,7 @@ This project presents a complete transistor-level design of a **3-bit Flash Anal
 <div align="center">
 <img src="images/schematics/flash_adc_full.jpeg" alt="Flash ADC Full Schematic" width="800"/>
 
-*Complete 3-bit Flash ADC schematic in Cadence Virtuoso*
+*Top-level Flash ADC schematic in Cadence Virtuoso*
 </div>
 
 ### System Block Diagram
@@ -85,13 +80,12 @@ This project presents a complete transistor-level design of a **3-bit Flash Anal
 
 ### 1. TMCC Comparator Stage
 
-The **Threshold-Modulated Current Comparator (TMCC)** detects when the input voltage exceeds predefined reference levels:
+The **Threshold-Modulated Current Comparator (TMCC)** stage compares the analog input against 7 reference thresholds to produce a thermometer-coded output. The comparator schematics themselves are not included as separate images in this repository (see [Repository Contents](#repository-contents)); the comparator array appears as part of the full schematic above.
 
 | Feature | Description |
 |---------|-------------|
 | **Function** | Analog voltage comparison |
 | **Output** | Thermometer-encoded signals |
-| **Technique** | Current modulation based on threshold |
 | **Count** | 7 comparators for 3-bit resolution |
 
 ### 2. Logic Conversion Stage
@@ -99,12 +93,11 @@ The **Threshold-Modulated Current Comparator (TMCC)** detects when the input vol
 <div align="center">
 <img src="images/schematics/7input_and_gate.jpeg" alt="AND Gate" width="700"/>
 
-*Custom AND gate for logic level restoration*
+*Custom transistor-level AND gate used for logic-level restoration*
 </div>
 
-- TMCC outputs converted to valid digital levels using **custom CMOS AND gates**
-- Each gate designed at transistor level using complementary pMOS/nMOS
-- Provides clean logic transitions for encoder input
+- Comparator outputs are converted to valid digital levels using custom CMOS AND gates
+- Each gate is built from individual pMOS/nMOS transistors rather than a standard-cell library
 
 ### 3. Encoder Stage
 
@@ -116,12 +109,12 @@ The **Threshold-Modulated Current Comparator (TMCC)** detects when the input vol
 </tr>
 <tr>
 <td align="center"><em>Custom 4-input OR gate (transistor level)</em></td>
-<td align="center"><em>8-to-3 thermometer-to-binary encoder</em></td>
+<td align="center"><em>8-to-3 thermometer-to-binary encoder, built from three 4-input OR gates</em></td>
 </tr>
 </table>
 </div>
 
-The encoder implements **thermometer-to-binary conversion**:
+The encoder converts the 7-bit thermometer code into a 3-bit binary output:
 
 | Thermometer Code | Binary Output |
 |------------------|---------------|
@@ -141,13 +134,13 @@ The encoder implements **thermometer-to-binary conversion**:
 <div align="center">
 <img src="images/schematics/top_level_mux.jpeg" alt="Top Level Integration" width="700"/>
 
-*Top-level schematic showing AND gate cases and 8-to-3 encoder blocks*
+*Top-level schematic combining the AND-gate case logic with the 8-to-3 encoder*
 </div>
 
 <div align="center">
 <img src="images/schematics/encoder_with_dac.jpeg" alt="Encoder with DAC" width="700"/>
 
-*Complete encoder section with DAC feedback*
+*Encoder section with buffer/inverter stages and a DAC block used for feedback*
 </div>
 
 ---
@@ -160,23 +153,9 @@ The encoder implements **thermometer-to-binary conversion**:
 | **Technology** | gpdk060nm CMOS |
 | **Supply Voltage** | 1.2 V |
 | **Comparator Type** | TMCC (Threshold-Modulated Current) |
-| **Logic Style** | Complementary CMOS |
+| **Logic Style** | Custom transistor-level CMOS |
 | **Number of Comparators** | 7 |
 | **Quantization Levels** | 8 |
-
----
-
-## Design Highlights
-
-| Feature | Benefit |
-|---------|---------|
-| **Fully Custom Design** | No standard cells - complete transistor-level control |
-| **TMCC Comparators** | Improved sensitivity and speed over conventional designs |
-| **Complementary CMOS** | Low static power, rail-to-rail swing |
-| **Hierarchical Structure** | Modular design for easy verification |
-| **Simulation Verified** | Spectre transient and DC analysis |
-
----
 
 ## Tools and Technology
 
@@ -186,33 +165,38 @@ The encoder implements **thermometer-to-binary conversion**:
 | **Simulation Engine** | Spectre |
 | **Technology Node** | gpdk060nm CMOS |
 | **Supply Voltage** | 1.2 V |
-| **Logic Type** | Custom CMOS (pMOS + nMOS) |
+| **Logic Type** | Custom CMOS (pMOS + nMOS), no standard cells |
 
 ---
 
-## Project Structure
+## Repository Contents
+
+This repository contains schematic screenshots documenting the design, not the underlying Cadence project files. The Virtuoso libraries, netlists, testbenches, and gpdk060nm PDK are not included (institutional/tool licensing).
 
 ```
-CMOS-Flash-ADC/
+Flash-ADC/
 ├── README.md
 └── images/
     └── schematics/
-        ├── flash_adc_full.jpeg      # Complete ADC schematic
-        ├── encoder_with_dac.jpeg    # Encoder section with DAC
-        ├── 4input_or_gate.jpeg      # OR gate transistor design
+        ├── flash_adc_full.jpeg      # Top-level ADC schematic
+        ├── encoder_with_dac.jpeg    # Encoder section with DAC feedback
+        ├── 4input_or_gate.jpeg      # OR gate, transistor level
         ├── 8to3_encoder.jpeg        # Thermometer-to-binary encoder
-        ├── 7input_and_gate.jpeg     # AND gate transistor design
+        ├── 7input_and_gate.jpeg     # AND gate, transistor level
         └── top_level_mux.jpeg       # Top-level integration
 ```
 
----
+## Status
 
-## Simulation Results
+- Schematic design is complete for all blocks shown above (comparators, AND-gate level restoration, OR-gate encoder, top-level integration).
+- No simulation waveforms, testbench files, or layout are included in this repository.
 
-- **Comparator Functionality**: Verified through transient and DC analysis
-- **Thermometer-to-Binary**: Correct transitions across input voltage range
-- **Propagation Delay**: Minimal delay suitable for high-speed applications
-- **Power Consumption**: Low static power due to complementary CMOS design
+## Future Enhancements
+
+- [ ] Add physical layout (place & route)
+- [ ] Include simulation waveforms and testbench results
+- [ ] Extend to higher resolution (4-bit, 6-bit)
+- [ ] Power and timing characterization
 
 ---
 
@@ -225,27 +209,7 @@ Vellore Institute of Technology (2021-2025)
 [![GitHub](https://img.shields.io/badge/GitHub-DarkDragoXE-black?logo=github)](https://github.com/DarkDragoXE)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-debtonu--bose-blue?logo=linkedin)](https://linkedin.com/in/debtonu-bose)
 
----
-
 ## Acknowledgments
 
-- **CSIR-CEERI, Pilani** for providing access to Cadence EDA tools and research guidance
+- CSIR-CEERI, Pilani, for access to Cadence EDA tools and research guidance
 - Advanced VLSI Design Workshop (March 2025) for foundational training in analog and mixed-signal design
-
----
-
-## Future Enhancements
-
-- [ ] Add layout design (physical implementation)
-- [ ] Include simulation waveforms and testbench results
-- [ ] Extend to higher resolution (4-bit, 6-bit)
-- [ ] Power and timing characterization
-- [ ] Export Cadence project files
-
----
-
-<div align="center">
-
-**Custom Analog IC Design | CSIR-CEERI, Pilani | Cadence EDA**
-
-</div>
